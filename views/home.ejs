@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - PromoPulse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('navbar') %>
+    <div class="container mt-4">
+        <div class="hero-section">
+            <h1 class="display-4 fw-bold">Welcome to PromoPulse</h1>
+            <p class="lead text-muted mb-4">A simple platform to create campaigns, generate coupons, and track redemptions.</p>
+            <div>
+                <a href="/login" class="btn btn-primary btn-lg me-2">Login</a>
+                <a href="/register" class="btn btn-outline-primary btn-lg">Register</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 text-center p-3">
+                    <div class="card-body">
+                        <h3 class="card-title h5 fw-bold">Create Campaigns</h3>
+                        <p class="card-text text-muted">Set up promotional campaigns with discounts and dates.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 text-center p-3">
+                    <div class="card-body">
+                        <h3 class="card-title h5 fw-bold">Generate Coupons</h3>
+                        <p class="card-text text-muted">Generate unique coupon codes for your campaigns.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 text-center p-3">
+                    <div class="card-body">
+                        <h3 class="card-title h5 fw-bold">Track Analytics</h3>
+                        <p class="card-text text-muted">View redemption stats with simple charts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

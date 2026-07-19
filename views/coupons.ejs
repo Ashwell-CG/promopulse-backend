@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupons - PromoPulse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('navbar') %>
+    <div class="container mt-4">
+        <h2 class="mb-4">Coupons</h2>
+        
+        <div class="card mb-5">
+            <div class="card-header bg-white fw-bold">
+                Validate Coupon
+            </div>
+            <div class="card-body">
+                <% if (typeof message !== 'undefined' && message) { %>
+                    <div class="alert alert-<%= typeof type !== 'undefined' ? type : 'info' %>">
+                        <%= message %>
+                    </div>
+                <% } %>
+                <form action="/coupons/validate" method="POST">
+                    <div class="input-group" style="max-width: 400px;">
+                        <input type="text" class="form-control" name="code" placeholder="Enter coupon code" required>
+                        <button class="btn btn-primary" type="submit">Validate</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <h4 class="mt-4 mb-3">All Coupons</h4>
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Coupon Code</th>
+                                <th>Campaign</th>
+                                <th>Expiry Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (typeof coupons !== 'undefined' && coupons.length > 0) { %>
+                                <% coupons.forEach(coupon => { %>
+                                    <tr>
+                                        <td class="font-monospace fw-bold"><%= coupon.code %></td>
+                                        <td><%= coupon.campaignId ? coupon.campaignId.name : 'Unknown' %></td>
+                                        <td><%= new Date(coupon.expiryDate).toLocaleDateString() %></td>
+                                        <td>
+                                            <% 
+                                            let statusClass = 'bg-success';
+                                            let statusText = 'Active';
+                                            
+                                            if (coupon.redeemed) {
+                                                statusClass = 'bg-danger';
+                                                statusText = 'Redeemed';
+                                            } else if (new Date(coupon.expiryDate) < new Date()) {
+                                                statusClass = 'bg-warning text-dark';
+                                                statusText = 'Expired';
+                                            }
+                                            %>
+                                            <span class="badge <%= statusClass %>"><%= statusText %></span>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-muted">
+                                        No coupons generated yet. Go to Campaigns to generate coupons.
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

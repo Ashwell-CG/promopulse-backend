@@ -1,0 +1,52 @@
+body {
+    background-color: #f5f6fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.navbar {
+    margin-bottom: 20px;
+}
+.card {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    border: none;
+    transition: box-shadow 0.3s ease;
+}
+.card:hover {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+.stat-card {
+    background: #fff;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+.stat-card h2 {
+    font-size: 2.5rem;
+    color: #4e73df;
+    margin-bottom: 0;
+}
+.stat-card.blue h2 { color: #4e73df; }
+.stat-card.green h2 { color: #1cc88a; }
+.stat-card.orange h2 { color: #f6c23e; }
+.stat-card.purple h2 { color: #6f42c1; }
+
+.btn-primary {
+    background-color: #4e73df;
+    border-color: #4e73df;
+}
+.btn-primary:hover {
+    background-color: #2e59d9;
+    border-color: #2653d4;
+}
+.hero-section {
+    padding: 80px 0;
+    text-align: center;
+    background: linear-gradient(to bottom, #e3e6f0, #ffffff);
+    border-radius: 8px;
+    margin-bottom: 40px;
+}
+table thead {
+    background-color: #f8f9fc;
+}
