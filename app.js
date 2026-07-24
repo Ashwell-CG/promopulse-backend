@@ -1,84 +1,58 @@
-// Load environment variables from .env file
 require('dotenv').config();
 
-// Require external modules
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
-
-// Require database configuration
 const connectDB = require('./config/db');
 
-// Require Models
 const Campaign = require('./models/Campaign');
 const Coupon = require('./models/Coupon');
 
-// Require Middleware
 const isLoggedIn = require('./middleware/auth');
-
-// Require Routes
 const authRoutes = require('./routes/auth');
 const campaignRoutes = require('./routes/campaigns');
 const couponRoutes = require('./routes/coupons');
 
-// Connect to database
 connectDB();
 
-// Create express app
 const app = express();
 
-// Configure view engine to use EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Middleware setup
-app.use(express.static('public')); // Serve static files from 'public' directory
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies (form data)
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
 
-// Session configuration
+// Configure secure sessions for user state management
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'secret', // Secret key for signing the session ID cookie
-  resave: false, // Don't save session if unmodified
-  saveUninitialized: false // Don't create session until something stored
+  secret: process.env.SESSION_SECRET || 'secret',
+  resave: false,
+  saveUninitialized: false
 }));
 
-// Routes
-
-// Home route
 app.get('/', (req, res) => {
   res.render('home', { user: req.session.userName });
 });
 
-// Dashboard route (protected by isLoggedIn middleware)
+// Protected dashboard route aggregating campaign and coupon metrics
 app.get('/dashboard', isLoggedIn, async (req, res) => {
   try {
     const userId = req.session.userId;
     
-    // Find all campaigns for the current user
     const userCampaigns = await Campaign.find({ userId: userId });
-    
-    // Get array of campaign IDs
     const campaignIds = userCampaigns.map(c => c._id);
-    
-    // Find all coupons associated with the user's campaigns
     const userCoupons = await Coupon.find({ campaignId: { $in: campaignIds } });
     
-    // Calculate statistics
     const totalCampaigns = userCampaigns.length;
     const totalCoupons = userCoupons.length;
     
-    // Count redeemed coupons
     const redeemedCoupons = userCoupons.filter(coupon => coupon.redeemed).length;
-    
-    // Calculate redemption rate
     const redemptionRate = totalCoupons > 0 ? ((redeemedCoupons / totalCoupons) * 100).toFixed(2) : 0;
     
-    // Find recent campaigns (last 5, sorted by creation date descending)
     const recentCampaigns = await Campaign.find({ userId: userId })
                                           .sort({ createdAt: -1 })
                                           .limit(5);
                                           
-    // Render dashboard view with data
     res.render('dashboard', {
       totalCampaigns,
       totalCoupons,
@@ -93,26 +67,21 @@ app.get('/dashboard', isLoggedIn, async (req, res) => {
   }
 });
 
-// Analytics route (protected by isLoggedIn middleware)
+// Protected analytics route providing detailed coupon breakdown
 app.get('/analytics', isLoggedIn, async (req, res) => {
   try {
     const userId = req.session.userId;
     
-    // Find all campaigns for the current user
     const userCampaigns = await Campaign.find({ userId: userId });
     const campaignIds = userCampaigns.map(c => c._id);
-    
-    // Find all coupons associated with the user's campaigns
     const userCoupons = await Coupon.find({ campaignId: { $in: campaignIds } });
     
-    // Calculate statistics
     const totalCampaigns = userCampaigns.length;
     const totalCoupons = userCoupons.length;
     const redeemedCoupons = userCoupons.filter(coupon => coupon.redeemed).length;
     const remainingCoupons = totalCoupons - redeemedCoupons;
     const redemptionRate = totalCoupons > 0 ? ((redeemedCoupons / totalCoupons) * 100).toFixed(2) : 0;
     
-    // Render analytics view with data
     res.render('analytics', {
       totalCampaigns,
       totalCoupons,
@@ -127,12 +96,10 @@ app.get('/analytics', isLoggedIn, async (req, res) => {
   }
 });
 
-// Use router files for specific path handling
 app.use('/', authRoutes);
 app.use('/', campaignRoutes);
 app.use('/', couponRoutes);
 
-// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

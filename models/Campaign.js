@@ -1,11 +1,9 @@
-// Require mongoose
 const mongoose = require('mongoose');
 
-// Define the Campaign schema
 const campaignSchema = new mongoose.Schema({
   userId: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', // Reference to the User model
+    ref: 'User',
     required: true 
   },
   name: { 
@@ -26,13 +24,11 @@ const campaignSchema = new mongoose.Schema({
   },
   status: { 
     type: String, 
-    enum: ['Active', 'Inactive'], // Only allow these two values
+    enum: ['Active', 'Inactive'],
     default: 'Active' 
   }
 }, {
-  // Automatically add createdAt and updatedAt timestamps
   timestamps: true
 });
 
-// Create and export the Campaign model
 module.exports = mongoose.model('Campaign', campaignSchema);
